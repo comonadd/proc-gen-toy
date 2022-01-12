@@ -6,23 +6,13 @@
   import FormLabel from "./FormLabel.svelte";
   import FormGroup from "./FormGroup.svelte";
   import debounce from "lodash/debounce";
+  import { color, randomChoice, xmur3 } from "./util";
+  import { INPUT_NOISE_REGEN_DELAY } from "./constants";
 
   const saved = writable("saved");
   saved.subscribe((value) => {
     localStorage.setItem("saved", JSON.stringify(value));
   });
-
-  const U = 1000;
-
-  /* const debounce = (fun, ms) => { */
-  /*   let timer; */
-  /*   return (...args) => { */
-  /*     clearTimeout(timer); */
-  /*     timer = setTimeout(() => { */
-  /*       fun(...args); */
-  /*     }, 750); */
-  /*   }; */
-  /* }; */
 
   // Controls
   const minFreq = 0;
@@ -31,7 +21,7 @@
   const onFrequencyChange = debounce((e) => {
     console.log("called");
     frequency = parseFloat(e.target.value);
-  }, U);
+  }, INPUT_NOISE_REGEN_DELAY);
 
   const minLacunarity = 0;
   const maxLacunarity = 32;
@@ -65,13 +55,6 @@
   };
 
   let canvas = null;
-
-  function color(red, green, blue) {
-    let rgb = red;
-    rgb = (rgb << 8) + green;
-    rgb = (rgb << 8) + blue;
-    return rgb;
-  }
 
   const BiomeKind = {
     Ocean: 0,
@@ -140,22 +123,6 @@
   let genTook = 0;
 
   // Generate seed number from a string using MurMurHash3
-  function xmur3(str) {
-    for (var i = 0, h = 1779033703 ^ str.length; i < str.length; i++) {
-      h = Math.imul(h ^ str.charCodeAt(i), 3432918353);
-      h = (h << 13) | (h >>> 19);
-    }
-    return function () {
-      h = Math.imul(h ^ (h >>> 16), 2246822507);
-      h = Math.imul(h ^ (h >>> 13), 3266489909);
-      return (h ^= h >>> 16) >>> 0;
-    };
-  }
-
-  const randomChoice = (arr) => {
-    const k = Math.round(Math.random() * (arr.length - 1));
-    return arr[k];
-  };
 
   const seedKeysDict = englishWords["commonWords"];
 
