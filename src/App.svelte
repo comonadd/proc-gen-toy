@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import keyBy from "lodash/keyBy";
   import SimpleTab from "./SimpleTab.svelte";
   import CustomTab from "./CustomTab.svelte";
